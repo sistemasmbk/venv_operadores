@@ -1,7 +1,9 @@
-from flask import Flask
+from flask import Flask, jsonify
+from flask_cors import CORS
 from bus.bus_operadores import Bus
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def principal():
@@ -9,11 +11,13 @@ def principal():
 
 @app.route('/operadores')
 def operadores():
-    operador = {
+    operador = [
+        {
         "clave": "031",
         "nombre": "Ramon C P"
-    }
-    return operador
+         }
+    ]
+    return jsonify(operador)
 
 @app.route('/',methods=['POST'])
 def insert_operador():
