@@ -11,12 +11,12 @@ def principal():
 
 @app.route('/operadores')
 def operadores():
-    operador = [
+    operador = 
         {
         "clave": "031",
         "nombre": "Ramon C P"
          }
-    ]
+
     return jsonify(operador)
 
 @app.route('/',methods=['POST'])
