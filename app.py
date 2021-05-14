@@ -9,14 +9,15 @@ CORS(app)
 def principal():
     return {"mensaje":"Hola Mundo"}
 
-@app.route('/operadores')
-def operadores():
-    operador = {
-        "clave": "031",
-        "nombre": "Ramon C P"
-         }
+@app.route('/operadores',methods=['GET'])
+def select_operadores():
+    b = Bus() 
+    return jsonify(b.obtener_operadores_todos())
 
-    return jsonify(operador)
+@app.route('/operadores/<string:clave>',methods=['GET'])
+def select_operador_pornumero(clave):
+    b = Bus()
+    return jsonify(b.obtener_operadores_por_clave(clave))
 
 @app.route('/',methods=['POST'])
 def insert_operador():

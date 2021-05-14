@@ -4,15 +4,40 @@ class Bus:
     
     def __init__(self):
         print("Se creo el objeto bus")
-    
+
+    def serializar(self,objetos):
+        json_resultado = []
+        for objeto in objetos:
+            if type(objeto) is str:
+                json_resultado.append({"Resultado":objeto})
+            else:
+                objeto_dicc = {}
+                for atributo in dir(objeto):
+                    if not atributo.startswith("__"):
+                        objeto_dicc[atributo] = getattr(objeto,atributo)
+                if len(objeto_dicc) > 0:
+                    json_resultado.append(objeto_dicc)
+        return json_resultado
+
+    def serializar_simple(self,objeto):
+        if type(objeto) is str:
+            return {"Resultado":objeto}
+        else:
+            objeto_dicc = {}
+            for atributo in dir(objeto):
+                if not atributo.startswith("__"):
+                    objeto_dicc[atributo] = getattr(objeto,atributo)
+            return objeto_dicc
+
     def obtener_operadores_todos(self):
         """Regresa una lista de objetos"""
         d = Dao_Operadores()
         try:
             d.conectar()
-            return d.select_operadores_todos()
+            operador = d.select_operadores_todos()
+            return self.serializar(operador)
         except Exception as e:
-            return "Error: No se pudo obtener la información." + e
+            return [f"Error: No se pudo obtener la información. {e}",]            
         finally:
             d.desconectar()
             
@@ -21,9 +46,10 @@ class Bus:
         d = Dao_Operadores()
         try:
             d.conectar()
-            return d.select_operadores_por_clave(clave)
+            operador = d.select_operadores_por_clave(clave)
+            return self.serializar_simple(operador)
         except Exception as e:
-            return "Error: No se pudo obtener la información." + e
+            return [f"Error: No se pudo obtener la información. {e}",]            
         finally:
             d.desconectar()
     

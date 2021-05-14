@@ -3,7 +3,7 @@ import psycopg2.extras
 
 class Conexion:
     
-    __user = "postgress"
+    __user = "postgres"
     __password = "P0stgr3s**"
     __host="cursos.cdvqfedytrah.us-east-1.rds.amazonaws.com"
     __port = "5432"
