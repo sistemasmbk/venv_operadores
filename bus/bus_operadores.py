@@ -60,15 +60,16 @@ class Bus:
             d.conectar()
             operador_a_buscar = d.select_operadores_por_clave(clave)
             if len(operador_a_buscar.clave)>0:
-                return "Error: Ya existe Operador."
+                return self.serializar_simple("Error: Ya existe Operador.")
             else:
                 operadores = d.insert_operadores(clave,nombre)
                 if operadores == 1:
-                    return "Clave: " + clave +" Nombre: " + nombre + " Datos insertados correctamente."
+                    return self.serializar_simple("Clave: " + clave +" Nombre: " + nombre + " Datos insertados correctamente.")
+                    # return "Clave: " + clave +" Nombre: " + nombre + " Datos insertados correctamente."
                 else:
                     raise Exception
         except Exception as e:
-            return "Error: No se pudo insertar la información."
+            return [f"Error: No se pudo insertar la información. {e}",]            
         finally:
             d.desconectar()
     
@@ -78,15 +79,15 @@ class Bus:
             d.conectar()
             operador_a_buscar = d.select_operadores_por_clave(clave)
             if len(operador_a_buscar.clave)<1:
-                return "Error: No existe el operador."
+                return self.serializar_simple("Error: No existe el operador.")
             else:
                 operadores = d.update_operadores_nombre(clave,nombre)
                 if operadores == 1:
-                    return "Clave: " + clave +" se actualizó con el nombre: " + nombre + " correctamente."
+                    return self.serializar_simple("Clave: " + clave +" se actualizó con el nombre: " + nombre + " correctamente.")
                 else:
                     raise Exception
         except Exception as e:
-            return "Error: No se pudo actualizar la información." + e
+            return [f"Error: No se pudo actualizar la información. + {e}",]
         finally:
             d.desconectar()
             
@@ -96,11 +97,11 @@ class Bus:
             d.conectar()
             operadores = d.delete_operadores_clave(clave)
             if operadores == 1:
-                return "Operador clave: " + clave + " se eliminó correctamente."
+                return self.serializar_simple("Operador clave: " + clave + " se eliminó correctamente.")
             else:
                 raise Exception
         except Exception as e:
-            return "Error: No se pudo actualizar la información." + e
+            return [f"Error: No se pudo actualizar la información. + {e}",]
         finally:
             d.desconectar()
     
