@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from bus.bus_operadores import Bus
+from vo.accion_operador import Accion_operador
 
 app = Flask(__name__)
 CORS(app)
@@ -31,10 +32,21 @@ def update_operador():
     contenido = request.json
     return jsonify(b.modificar_nombre_operador(contenido['clave'],contenido['nombre']))
 
-@app.route('/operadores/<string:clave>',methods=['DELETE'])
-def delete_operador(clave):
+@app.route('/operadores/delete',methods=['POST'])
+def delete_operador():
     b = Bus()
-    return jsonify(b.eliminar_operadores(clave))
+    accion = Accion_operador()
+    accion.clave_usuario = request.json['clave_usuario']
+    accion.nombre_usuario = request.json['nombre_usuario']
+    print(request.json['operador'])
+    accion.operador.clave = request.json['operador']['clave']
+    accion.operador.nombre = request.json['operador']['nombre']
+    return jsonify(b.eliminar_operadores(accion))
+
+# @app.route('/operadores/<string:clave>',methods=['DELETE'])
+# def delete_operador(clave):
+#     b = Bus()
+#     return jsonify(b.eliminar_operadores(clave))
 
 
 if __name__ == '__main__':

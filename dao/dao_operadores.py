@@ -69,3 +69,6 @@ class Dao_Operadores(Conexion):
         except Exception as e:
             print("Error: No se pudo eliminar la información.",e) 
             return 0 
+
+    def insert_bitacora(self, clave_usuario, nombre_usuario, accion):
+        print("Bitacora Registrada accion: " + accion + " realizado por : " + clave_usuario + "-" + nombre_usuario)

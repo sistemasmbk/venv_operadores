@@ -1,5 +1,6 @@
 from dao.dao_operadores import Dao_Operadores
 from vo.respuesta import Respuesta
+from vo.accion_operador import Accion_operador
 
 class Bus:
     
@@ -110,18 +111,26 @@ class Bus:
         finally:
             d.desconectar()
             
-    def eliminar_operadores(self,clave):
+    def eliminar_operadores(self,accion_operador):
         d = Dao_Operadores()
         try:
-            d.conectar()
-            operadores = d.delete_operadores_clave(clave)
-            if operadores == 1:
+            if accion_operador.operador.clave == "001":
                 res = Respuesta()
-                res.codigo = True
-                res.mensaje = "Operador clave: " + clave + " se eliminó correctamente."
+                res.codigo = False
+                res.mensaje = "Operador clave: " + accion_operador.operador.clave + " no puede ser eliminado. usario: " + accion_operador.clave_usuario + " Nombre Usuario: " + accion_operador.nombre_usuario
                 return self.serializar_simple(res)
             else:
-                raise Exception
+                d.conectar()
+                operadores = d.delete_operadores_clave(accion_operador.operador.clave)
+                if operadores == 1:
+                    res = Respuesta()
+                    res.codigo = True
+                    res.mensaje = "Operador clave: " + accion_operador.operador.clave + " se eliminó correctamente. usario: " + accion_operador.clave_usuario + " Nombre Usuario: " + accion_operador.nombre_usuario
+                    # Bitacora
+                    d.insert_bitacora(accion_operador.clave_usuario, accion_operador.nombre_usuario,"Eliminar")
+                    return self.serializar_simple(res)
+                else:
+                    raise Exception
         except Exception as e:
             res = Respuesta()
             res.codigo = False
