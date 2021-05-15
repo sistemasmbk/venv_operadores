@@ -1,4 +1,5 @@
 from dao.dao_operadores import Dao_Operadores
+from vo.respuesta import Respuesta
 
 class Bus:
     
@@ -60,16 +61,25 @@ class Bus:
             d.conectar()
             operador_a_buscar = d.select_operadores_por_clave(clave)
             if len(operador_a_buscar.clave)>0:
-                return self.serializar_simple("Error: Ya existe Operador.")
+                res = Respuesta()
+                res.codigo = False
+                res.mensaje = "Ya existe Operador. Accion no realizada"
+                return self.serializar_simple(res)
             else:
                 operadores = d.insert_operadores(clave,nombre)
                 if operadores == 1:
-                    return self.serializar_simple("Clave: " + clave +" Nombre: " + nombre + " Datos insertados correctamente.")
+                    res = Respuesta()
+                    res.codigo = True
+                    res.mensaje = "Clave: " + clave +" Nombre: " + nombre + " Datos insertados correctamente."
+                    return self.serializar_simple(res)
                     # return "Clave: " + clave +" Nombre: " + nombre + " Datos insertados correctamente."
                 else:
                     raise Exception
         except Exception as e:
-            return [f"Error: No se pudo insertar la información. {e}",]            
+            res = Respuesta()
+            res.codigo = False
+            res.mensaje = f"No se pudo insertar la información. {e}"
+            return self.serializar_simple(res)
         finally:
             d.desconectar()
     
@@ -79,15 +89,24 @@ class Bus:
             d.conectar()
             operador_a_buscar = d.select_operadores_por_clave(clave)
             if len(operador_a_buscar.clave)<1:
-                return self.serializar_simple("Error: No existe el operador.")
+                res = Respuesta()
+                res.codigo = False
+                res.mensaje = "No Existe el operador"
+                return self.serializar_simple(res)
             else:
                 operadores = d.update_operadores_nombre(clave,nombre)
                 if operadores == 1:
-                    return self.serializar_simple("Clave: " + clave +" se actualizó con el nombre: " + nombre + " correctamente.")
+                    res = Respuesta()
+                    res.codigo = True
+                    res.mensaje = "Clave: " + clave +" se actualizó con el nombre: " + nombre + " correctamente."
+                    return self.serializar_simple(res)
                 else:
                     raise Exception
         except Exception as e:
-            return [f"Error: No se pudo actualizar la información. + {e}",]
+            res = Respuesta()
+            res.codigo = False
+            res.mensaje = "No se pudo actualizar la información."
+            return self.serializar_simple(res)
         finally:
             d.desconectar()
             
@@ -97,11 +116,17 @@ class Bus:
             d.conectar()
             operadores = d.delete_operadores_clave(clave)
             if operadores == 1:
-                return self.serializar_simple("Operador clave: " + clave + " se eliminó correctamente.")
+                res = Respuesta()
+                res.codigo = True
+                res.mensaje = "Operador clave: " + clave + " se eliminó correctamente."
+                return self.serializar_simple(res)
             else:
                 raise Exception
         except Exception as e:
-            return [f"Error: No se pudo actualizar la información. + {e}",]
+            res = Respuesta()
+            res.codigo = False
+            res.mensaje = "No se encontro operador"
+            return self.serializar_simple(res)
         finally:
             d.desconectar()
     
